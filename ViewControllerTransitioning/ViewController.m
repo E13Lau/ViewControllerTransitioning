@@ -48,7 +48,10 @@
     
     self.privateContainerView = [[UIView alloc]init];
     [self.view addSubview:self.privateContainerView];
+    [self.privateContainerView addSubview:[UIView new]];
     [self.privateContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.mas_topLayoutGuideBottom);
+//        make.leading.trailing.bottom.equalTo(self.view);
         make.edges.equalTo(self.view);
     }];
     
@@ -66,14 +69,20 @@
     
     AViewController * aController = [AViewController new];
     aController.view.backgroundColor = [UIColor yellowColor];
+    [self addObserver:aController forKeyPath:@"parentContentInset" options:NSKeyValueObservingOptionNew context:NULL];
     AViewController * bController = [AViewController new];
+    [self addObserver:bController forKeyPath:@"parentContentInset" options:NSKeyValueObservingOptionNew context:NULL];
     bController.view.backgroundColor = [UIColor blueColor];
     AViewController * cController = [AViewController new];
+    [self addObserver:cController forKeyPath:@"parentContentInset" options:NSKeyValueObservingOptionNew context:NULL];
+
     cController.view.backgroundColor = [UIColor greenColor];
     
     [controllers addObject:aController];
     [controllers addObject:bController];
     [controllers addObject:cController];
+    
+    self.parentContentInset = UIEdgeInsetsMake(64, 0, 56, 0);
     
     self.selectedViewController = (self.selectedViewController ? : controllers[0]);
 }

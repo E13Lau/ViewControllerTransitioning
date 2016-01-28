@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) UIView *privateContainerView; /// The view hosting the child view controllers views.
 
+@property (nonatomic, assign) UIEdgeInsets parentContentInset;
 
 @end
 

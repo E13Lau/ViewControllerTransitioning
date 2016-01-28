@@ -9,7 +9,9 @@
 #import "AViewController.h"
 #import <Masonry.h>
 
-@interface AViewController () <UITableViewDelegate,UITableViewDataSource>
+@interface AViewController () <UITableViewDelegate,UITableViewDataSource> {
+
+}
 
 @end
 
@@ -20,12 +22,8 @@
     
     [self.view setBackgroundColor:[UIColor cyanColor]];
     
-    UIButton * button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setTitle:@"push" forState:UIControlStateNormal];
-    [button setFrame:CGRectMake(0, 100, 100, 100)];
-    [self.view addSubview:button];
-    [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     UITableView * table = [[UITableView alloc]init];
+    table.tag = 777;
     [table registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     table.delegate = self;
     table.dataSource = self;
@@ -33,7 +31,31 @@
     [table mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
+    
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button setTitle:@"push" forState:UIControlStateNormal];
+    [button setFrame:CGRectMake(0, 100, 100, 100)];
+    [self.view addSubview:button];
+    [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+
     // Do any additional setup after loading the view.
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent {
+    [super willMoveToParentViewController:parent];
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent {
+    [super didMoveToParentViewController:parent];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"parentContentInset"]) {
+        UITableView * tableView = [self.view viewWithTag:777];
+        tableView.contentOffset = CGPointMake(0, -64);
+        tableView.contentInset = UIEdgeInsetsMake(64, 0, 56, 0);
+        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 56, 0);
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -41,12 +63,13 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return 30;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.textLabel.text = @"AAA";
+    cell.backgroundColor = [UIColor cyanColor];
     return cell;
 }
 
